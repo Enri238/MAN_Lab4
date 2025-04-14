@@ -1,3 +1,5 @@
+// Eduardo Ariza Abad y Enrique Ibáñez Rico
+
 package org.mps;
 
 import org.mps.crossover.CrossoverOperator;
@@ -35,10 +37,10 @@ public class EvolutionaryAlgorithm {
 
     public EvolutionaryAlgorithm(SelectionOperator selectionOperator, MutationOperator mutationOperator,
             CrossoverOperator crossoverOperator) throws EvolutionaryAlgorithmException {
-        if (selectionOperator == null || mutationOperator == null || crossoverOperator == null) { // a
-            throw new EvolutionaryAlgorithmException("Argumentos nulos"); // b
+        if (selectionOperator == null || mutationOperator == null || crossoverOperator == null) {
+            throw new EvolutionaryAlgorithmException("Argumentos nulos");
         }
-        this.selectionOperator = selectionOperator; // c los 3
+        this.selectionOperator = selectionOperator;
         this.mutationOperator = mutationOperator;
         this.crossoverOperator = crossoverOperator;
     }
@@ -46,39 +48,38 @@ public class EvolutionaryAlgorithm {
 
     public int[][] optimize(int[][] population) throws EvolutionaryAlgorithmException {
         
-        // Añadidas últimas 2 condiciones
-        if (population != null && population.length  > 0 && population[0] != null && population.length % 2 == 0) { // d
+        // ERROR: Añadidas últimas 2 condiciones
+        if (population != null && population.length  > 0 && population[0] != null && population.length % 2 == 0) {
             // Creamos una nueva población para los descendientes
-            int[][] offspringPopulation = new int[population.length][population[0].length]; // e
+            int[][] offspringPopulation = new int[population.length][population[0].length];
 
             // Aplicamos operadores de selección y cruce para generar descendientes
-            for (int i = 0; i < population.length; i += 2) { // g
+            for (int i = 0; i < population.length; i += 2) {
                 // Seleccionamos dos individuos de la población actual
-                int[] parent1 = selectionOperator.select(population[i]); // h
-                int[] parent2 = selectionOperator.select(population[i + 1]); // i
+                int[] parent1 = selectionOperator.select(population[i]);
+                int[] parent2 = selectionOperator.select(population[i + 1]);
                
                 // Aplicamos el operador de cruce para generar dos descendientes
-                int[][] offspring = crossoverOperator.crossover(parent1, parent2); // j
-                // k
+                int[][] offspring = crossoverOperator.crossover(parent1, parent2);
                 offspringPopulation[i] = offspring[0];
                 offspringPopulation[i + 1] = offspring[1];
             }
 
             // Aplicamos operador de mutación a los descendientes
-            for (int i = 0; i < offspringPopulation.length; i++) { // l
-                offspringPopulation[i] = mutationOperator.mutate(offspringPopulation[i]); // m
+            for (int i = 0; i < offspringPopulation.length; i++) {
+                offspringPopulation[i] = mutationOperator.mutate(offspringPopulation[i]);
             }
 
             // Reemplazo
-            for (int i = 0; i < population.length; i++) { // n
-                if (better(offspringPopulation[i], population[i])) { // o
-                    population[i] = offspringPopulation[i]; // p
+            for (int i = 0; i < population.length; i++) {
+                if (better(offspringPopulation[i], population[i])) {
+                    population[i] = offspringPopulation[i];
                 }
             }
         } else {
-            throw new EvolutionaryAlgorithmException("Poblacion no valida"); // f
+            throw new EvolutionaryAlgorithmException("Poblacion no valida");
         }
-        return population; // q
+        return population;
     }
 
     /*
@@ -89,11 +90,10 @@ public class EvolutionaryAlgorithm {
     private boolean better(int[] population1, int[] population2) {
         int suma1 = 0;
         int suma2 = 0;
-        if (population1 != null && population2 != null && population1.length == population2.length) {
-            for (int i = 0; i < population1.length; i++) {
-                suma1 += population1[i];
-                suma2 += population2[i];
-            }
+        // ERROR: Eliminado el if porque ya se comprueban las condiciones en el método optimize()
+        for (int i = 0; i < population1.length; i++) {
+            suma1 += population1[i];
+            suma2 += population2[i];
         }
         return suma1 < suma2;
     }

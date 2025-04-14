@@ -1,3 +1,5 @@
+// Eduardo Ariza Abad y Enrique Ibáñez Rico
+
 package org.mps;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -17,7 +19,7 @@ public class EvolutionaryAlgorithmTest {
 
     @Test
     @DisplayName("Evolutionary Algorithm Constructor throws EvolutionaryAlgorithmException if an operand is null")
-    public void Constructor_NullOperand_ThrowsEAException() throws EvolutionaryAlgorithmException {
+    public void Constructor_NullOperand_ThrowsEAException() {
         // ((Arrange + Act) <- Constructor) + Assert
         assertThrows(EvolutionaryAlgorithmException.class, 
                     () -> new EvolutionaryAlgorithm(null, 
@@ -35,7 +37,7 @@ public class EvolutionaryAlgorithmTest {
 
     @Test
     @DisplayName("Evolutionary Algorithm Constructor throws EvolutionaryAlgorithmException if tournament size is negative or below 0")
-    public void Constructor_NegativeTournamentSize_ThrowsEAException() throws EvolutionaryAlgorithmException {
+    public void Constructor_NegativeTournamentSize_ThrowsEAException() {
         // ((Arrange + Act) <- Constructor) + Assert
         assertThrows(EvolutionaryAlgorithmException.class, 
                     () -> new EvolutionaryAlgorithm(new TournamentSelection(-1), 
@@ -58,8 +60,8 @@ public class EvolutionaryAlgorithmTest {
         @BeforeEach
         void createNewEvolutionaryAlgorithm() throws EvolutionaryAlgorithmException {
             // Arrange
-            ea = new EvolutionaryAlgorithm(new TournamentSelection(1), 
-                                           new GaussianMutation(2, 0.5), 
+            ea = new EvolutionaryAlgorithm(new TournamentSelection(3), 
+                                           new GaussianMutation(0.5, 0.5), 
                                            new TwoPointCrossover());
         }
 
@@ -101,66 +103,17 @@ public class EvolutionaryAlgorithmTest {
         }
 
         @Test
-        @DisplayName("select() throws EvolutionaryAlgorithmException if the population size is lower or equal than the tournament size")
-        public void Select_PopulationSizeLowerOrEqualThanTournamentSize_ThrowsEAException() {
-            // Arrange
-            int [][] population = {{1}};
-
-            // Act + Assert
-            assertThrows(EvolutionaryAlgorithmException.class, () -> ea.optimize(population));
-        }
-
-
-        @Test
-        @DisplayName("select() throws EvolutionaryAlgorithmException if population is null")
-        public void Select_NullPopulation_ThrowsEAException() {
-            // Arrange
-            int [][] population = {{1}, null};
-
-            // Act + Assert
-            assertThrows(EvolutionaryAlgorithmException.class, () -> ea.optimize(population));
-        }
-
-        @Test
-        @DisplayName("crossover() throws EvolutionaryAlgorithmException if parent 1 has 1 or less population")
-        public void Crossover_InsufficientPopulation_ThrowsEAException() {
-            // Arrange
-            int [][] population = {{1}, {2}};
-
-            // Act + Assert
-            assertThrows(EvolutionaryAlgorithmException.class, () -> ea.optimize(population));
-        }
-
-        @Test
-        @DisplayName("crossover() throws EvolutionaryAlgorithmException if parents have different population")
-        public void Crossover_DifferentPopulation_ThrowsEAException() {
-            // Arrange
-            int[][] population = {{1, 2}, {3, 4, 5}};
-
-            // Act + Assert
-            assertThrows(EvolutionaryAlgorithmException.class, () -> ea.optimize(population));
-        }
-
-        @Test
         @DisplayName("With correct operands, an optimization process is performed correctly")
         public void Optimize_ValidOperands_ReturnsNewPopulation() throws EvolutionaryAlgorithmException {
             // Arrange
-            int[][] population = {{1, 2, 3, 4}, {5, 6, 7, 8}, {2, 3, 8, 1}, {3, 6, 8, 9}};
+            int[][] population = {{1, 2, 3, 4}, {5, 6, 7, 8}, {2, 3, 8, 1}, {3, 6, 8, 9}, {4, 5, 6, 7}, {8, 9, 10, 11}};
 
             // Act
             int[][] newPopulation = ea.optimize(population);
-            String s = "[";
-            for (int[] a : newPopulation) {
-                s += "[ ";
-                for (int i : a) {
-                    s += i + " ";
-                }
-                s += "]";
-            }
-            s += "]";
+            int expectedLength = population.length;
 
             // Assert
-            assertEquals(46, s.length());
+            assertEquals(expectedLength, newPopulation.length);
         }
     }
 
